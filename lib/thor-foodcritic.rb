@@ -6,7 +6,7 @@ module ThorFoodCritic
     namespace "foodcritic"
 
     method_option :tags,
-      type: :array, 
+      type: :array,
       aliases: "-t", 
       desc: "Only check against rules with the specified tags.",
       default: Array.new
@@ -25,9 +25,14 @@ module ThorFoodCritic
       aliases: "-e",
       desc: "Paths to exclude when running tests.",
       default: ['test/**/*', 'spec/**/*', 'features/**/*']
-    desc "lint", "Run a lint test against the Cookbook in your current working directory."
+    method_option :path_to_check,
+      type: :array,
+      aliases: "-p",
+      desc: "Paths to test.",
+      default: Array.new(1, Dir.pwd)
+    desc "lint", "Run a lint test against the Cookbook."
     def lint
-      review = ::FoodCritic::Linter.new.check(Dir.pwd, 
+      review = ::FoodCritic::Linter.new.check(options[:path_to_check],
         tags: options[:tags],
         include_rules: options[:include],
         fail_tags: options[:epic_fail],
